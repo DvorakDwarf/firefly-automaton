@@ -1,8 +1,9 @@
 use rand::Rng;
 use core::fmt::Debug;
+use std::char::MAX;
 use dyn_clone::DynClone;
 
-use crate::{consts::{MAX_BRIGHTNESS, OFFSET, WIDTH, HEIGHT}, grid::Grid};
+use crate::{consts::{MAX_BRIGHTNESS, OFFSET, WIDTH, HEIGHT, BLINK_COOLDOWN}, grid::Grid};
 
 pub trait Cell: DynClone {
     fn new(x: u32, y: usize) -> Self
@@ -12,7 +13,7 @@ pub trait Cell: DynClone {
 
     fn get_color(&self) -> [u8; 4];
 
-    fn get_brightness(&self) -> u8;
+    fn get_brightness(&self) -> i16;
 
     //Not because needed, more convenient, see Grid
     fn update(&mut self, grid: &Vec<Vec<Box<dyn Cell>>>);
@@ -28,7 +29,7 @@ impl Debug for dyn Cell {
 
 #[derive(Debug, Clone)]
 pub struct Light {
-    brightness: u8,
+    brightness: i16,
     neighbors: Vec<(usize, usize)>,
     
 }
@@ -65,17 +66,17 @@ impl Cell for Light {
 
     fn get_color(&self) -> [u8; 4] {
         let r_scale = 255 / MAX_BRIGHTNESS;
-        return [r_scale * self.brightness, 0, 0, 255];
+        return [(r_scale * self.brightness) as u8, 0, 0, 255];
     }
 
-    fn get_brightness(&self) -> u8 {
+    fn get_brightness(&self) -> i16 {
         return self.brightness;
     }
 }
 #[derive(Debug, Clone)]
 pub struct Firefly {
-    brightness: u8,
-    cooldown: u8,
+    brightness: i16,
+    cooldown: i16,
     neighbors: Vec<(usize, usize)>
 }
 
@@ -110,24 +111,46 @@ impl Cell for Firefly {
             brightness_vec.push(grid[*y][*x].get_brightness());
         }
 
-        let brightness: u32 = brightness_vec.iter().map(|x| *x as u32).sum();
+        let nearby_brightness: u32 = brightness_vec.iter().map(|x| *x as u32).sum();
 
-        // if brightness < 10 {
-        //     self.brightness += 1;
-        // }
-
-        self.brightness += 1;
-        if self.brightness > 15 {
-            self.brightness = 0;
+        if nearby_brightness > 40 {
+            self.brightness += 1;
+            if self.brightness == 16 {
+                self.brightness = 15;
+            }
+        } else {
+            self.brightness -= 1;
+            if self.brightness < 0 {
+                self.brightness = 0;
+            }
         }
+
+        // self.brightness_step();
+        self.cooldown_step();
     }
 
     fn get_color(&self) -> [u8; 4] {
         let r_scale = 255 / MAX_BRIGHTNESS;
-        return [r_scale * self.brightness, 0, 0, 255];
+        return [(r_scale * self.brightness) as u8, 0, 0, 255];
     }
 
-    fn get_brightness(&self) -> u8 {
+    fn get_brightness(&self) -> i16 {
         return self.brightness;
+    }
+}
+
+impl Firefly {
+    fn cooldown_step(&mut self) {
+        self.cooldown -= 1;
+        if self.cooldown < 0 {
+            self.cooldown = BLINK_COOLDOWN;
+        }
+    }
+
+    fn brightness_step(&mut self) {
+        self.brightness -= 1;
+        if self.brightness < 0 {
+            self.brightness = MAX_BRIGHTNESS;
+        }
     }
 }
