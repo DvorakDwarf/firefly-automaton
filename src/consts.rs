@@ -3,4 +3,6 @@ pub const HEIGHT: u32 = 240;
 
 pub const MAX_BRIGHTNESS: u8 = 15;
 
-pub const FPS: u8 = 2;
+pub const FPS: f32 = 2.;
+
+pub const OFFSET: i32 = 2;

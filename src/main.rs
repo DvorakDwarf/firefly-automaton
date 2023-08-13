@@ -4,6 +4,8 @@ use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::{WindowBuilder, self};
 use winit_input_helper::WinitInputHelper;
+use std::time::Duration;
+use std::{thread, time};
 
 mod grid;
 mod cell;
@@ -16,6 +18,7 @@ fn main() -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let mut input = WinitInputHelper::new();
     let mut grid = Grid::new();
+    const FRAME_DURATION: Duration = time::Duration::from_millis((1000. / FPS) as u64);
 
     let window = {
         let size = LogicalSize::new(WIDTH as f64, HEIGHT as f64);
@@ -58,6 +61,11 @@ fn main() -> Result<(), Error> {
 
             // Update internal state and request a redraw
             grid.update();
+
+            //Constant no matter runtime
+            //TODO
+            thread::sleep(FRAME_DURATION);
+
             window.request_redraw();
         }
     })
