@@ -22,7 +22,7 @@ impl Grid {
         for (y, row) in &mut grid.iter_mut().enumerate() {
             for x in 0..WIDTH {
                 let rand_percent = rand::thread_rng().gen_range(0..1000);
-                if rand_percent >= 999 {
+                if rand_percent >= (1000 - CHANCE_TO_SPAWN) {
                     row.push(Box::new(Firefly::new(x, y)));
                 } else {
                     row.push(Box::new(Light::new(x, y)));

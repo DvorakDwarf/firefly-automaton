@@ -21,7 +21,6 @@ fn ease_out_expo(x: f32) -> f32 {
     return -1.*(2.0f32.powf(7.*(x-1.))) + 1.; 
 }
 
-//Technically incorrect function name
 fn ease_out_quart(x: f32) -> f32 {
     return 1. - (x.powf(4.));
 }
