@@ -1,7 +1,7 @@
 # Firefly syncronization
 ![full_length](https://github.com/DvorakDwarf/firefly-automaton/assets/96934612/1a707f5a-c814-4863-9240-0f71ef2695d1)
 
-A cellular automaton simulation of the way fireflies sync their flashes together in the wild. Firefly model inspired by [this Wired article](https://www.wired.com/story/a-new-explanation-for-how-fireflies-flash-in-sync/). I just thought it would look neat and in my humble opinion I was right. It looks kind of life a screensaver, maybe it would work on wallpaper engine. The project is entirely written in Rust.
+A cellular automaton simulation of the way fireflies sync their flashes together in the wild. Firefly model inspired by [this Wired article](https://www.wired.com/story/a-new-explanation-for-how-fireflies-flash-in-sync/). I just thought it would look neat and in my humble opinion I was right. It looks kind of life a screensaver, maybe it would work on wallpaper engine. The project is entirely written in Rust (my beloved).
 
 ## Installation
 You need Rust installed and I believe that's it
