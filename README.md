@@ -7,7 +7,7 @@ A cellular automaton simulation of the way fireflies sync their flashes together
 You need Rust installed and I believe that's it
 1. `https://github.com/DvorakDwarf/firefly-automaton.git`
 2. `cd firefly-automaton`
-3. Edit parameters for the simulation in `constants.rs`
+3. Edit parameters for the simulation in `constants.rs` if you want
 4. `cargo run --release`
 5. PROFIT
 
