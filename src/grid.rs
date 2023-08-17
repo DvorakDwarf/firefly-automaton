@@ -1,7 +1,9 @@
 use rand::Rng;
 use core::ops::Index;
 
-use crate::cell::{Cell, Firefly, Light};
+use crate::cell::Cell;
+use crate::light::Light;
+use crate::firefly::Firefly;
 use crate::consts::*;
 
 #[derive(Clone)]
@@ -19,8 +21,8 @@ impl Grid {
 
         for (y, row) in &mut grid.iter_mut().enumerate() {
             for x in 0..WIDTH {
-                let rand_percent = rand::thread_rng().gen_range(0..100);
-                if rand_percent >= 90 {
+                let rand_percent = rand::thread_rng().gen_range(0..1000);
+                if rand_percent >= 999 {
                     row.push(Box::new(Firefly::new(x, y)));
                 } else {
                     row.push(Box::new(Light::new(x, y)));
@@ -48,11 +50,16 @@ impl Grid {
     }
 
     pub fn update(&mut self) {
-        let copy_grid = &self.grid.clone();
+        let copy_grid = &mut self.grid.clone();
         for y in 0..HEIGHT as usize{
             for x in 0..WIDTH as usize{
                 let cell = &mut self.grid[y][x];
-                cell.update(copy_grid);
+                let reply = cell.update(copy_grid);
+                if reply[0].is_some() {
+                    for (x, y, state) in reply.iter().map(|x| x.unwrap()) {
+                        self.grid[y][x].set_state(state);
+                    }
+                }
             }
         }
     }
